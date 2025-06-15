@@ -167,3 +167,45 @@
     opacity: 1;
   }
 }
+
+.thinking-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.brain-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brain-icon {
+  position: relative;
+  font-size: 2rem;
+}
+
+.overlay {
+  position: absolute;
+  right: -0.2rem;
+  top: -0.3rem;
+}
+
+.overlay.thinking {
+  animation: spin 1.5s linear infinite;
+}
+
+.brain-label {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
