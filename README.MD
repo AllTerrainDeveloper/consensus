@@ -1,6 +1,6 @@
 # Consensus React App
 
-This repository contains a minimal React application bootstrapped with **Vite** and configured with **React Router**. It uses `react-dom` for rendering the application.
+This repository contains **Consensus AI**, a sleek chat interface built with **Vite** and **React**. It features a sidebar listing previous sessions and a vibrant, animated chat view.
 
 ## Getting Started
 
