@@ -11,6 +11,10 @@ const models = ['OpenAI', 'Claude', 'Gemini'] as const
 
 type ModelState = Record<(typeof models)[number], 'thinking' | 'done'>
 
+function randomDelay() {
+  return Math.floor(Math.random() * 2000) + 1000 // 1-3 seconds
+}
+
 export default function ChatView() {
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, text: 'Hello! Ask me anything.', sender: 'bot' },
@@ -20,9 +24,10 @@ export default function ChatView() {
 
   const handleSend = () => {
     if (!input.trim()) return
+    const prompt = input
     const userMessage: Message = {
       id: messages.length + 1,
-      text: input,
+      text: prompt,
       sender: 'user',
     }
     setMessages((m) => [...m, userMessage])
@@ -35,21 +40,34 @@ export default function ChatView() {
     }
     setThinking(initial)
 
-    models.forEach((model, idx) => {
-      setTimeout(() => {
-        setThinking((t) => (t ? { ...t, [model]: 'done' } : t))
-      }, 1500 + idx * 500)
-    })
+    const thinkingPromises = models.map(
+      (model) =>
+        new Promise<void>((resolve) => {
+          const delay = randomDelay()
+          setTimeout(() => {
+            setThinking((t) => (t ? { ...t, [model]: 'done' } : t))
+            resolve()
+          }, delay)
+        }),
+    )
 
-    setTimeout(() => {
-      const botMessage: Message = {
+    Promise.all(thinkingPromises).then(() => {
+      const gather: Message = {
         id: Date.now(),
-        text: `Echo: ${input}`,
+        text: 'gathering responses',
         sender: 'bot',
       }
-      setThinking(null)
-      setMessages((m) => [...m, botMessage])
-    }, 3000)
+      setMessages((m) => [...m, gather])
+
+      setTimeout(() => {
+        const botMessage: Message = {
+          id: Date.now() + 1,
+          text: `Echo: ${prompt}`,
+          sender: 'bot',
+        }
+        setMessages((m) => [...m, botMessage])
+      }, 1000)
+    })
   }
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
