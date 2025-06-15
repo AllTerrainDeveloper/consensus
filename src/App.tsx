@@ -1,4 +1,10 @@
-import { useState } from 'react'
+import { useState, type KeyboardEvent } from 'react'
+
+interface Message {
+  id: number
+  text: string
+  sender: 'bot' | 'user'
+}
 import './App.css'
 
 const mockSessions = ['Session 1', 'Session 2', 'Session 3']
@@ -23,7 +29,7 @@ function Sidebar() {
 }
 
 function ChatView() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     { id: 1, text: 'Hello! Ask me anything.', sender: 'bot' },
   ])
   const [input, setInput] = useState('')
@@ -39,7 +45,7 @@ function ChatView() {
     }, 500)
   }
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleSend()
   }
 
